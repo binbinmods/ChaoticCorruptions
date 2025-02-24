@@ -19,11 +19,11 @@ namespace ChaoticCorruptions
         public static CardData GetRandomCard(Hero hero, bool craftableOnly = true)
         {
             int madness = AtOManager.Instance?.GetNgPlus() ?? 0;
-            int commonChance = craftableOnly ? (madness < 5 ? 60 : 70) : 35;
+            int commonChance = craftableOnly ? (madness < 5 ? 10 : 35) : 30;
             // int commonChance = craftableOnly ? 70: 35;
-            int uncommonChance = craftableOnly ? (madness < 5 ? 30 : 30) : 30;
-            int rareChance = craftableOnly ? (madness < 5 ? 0 : 0) : 20;
-            int epicChance = craftableOnly ? (madness < 5 ? 0 : 0) : 10;
+            int uncommonChance = craftableOnly ? (madness < 5 ? 65 : 60) : 35;
+            int rareChance = craftableOnly ? (madness < 5 ? 20 : 5) : 20;
+            int epicChance = craftableOnly ? (madness < 5 ? 5 : 0) : 10;
             // int mythicChance = craftableOnly ? (madness < 5 ? 0 : 0) : 5;
 
             Enums.CardClass result1 = Enums.CardClass.None;

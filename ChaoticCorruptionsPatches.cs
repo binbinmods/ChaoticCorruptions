@@ -104,15 +104,16 @@ namespace ChaoticCorruptions
             //     __instance.Cards = cards;
             // }
             // else if (RandomizeStartingDecks.Value || devMode)
-            // {
+            if (RandomizeStartingDecks.Value || devMode)
+            {
                 
-            //     for (int i = 0; i < cards.Count; i++)
-            //     {
-            //         string card = cards[i];
-            //         cards[i] = GetRandomCard(__instance, craftableOnly: true).Id;
-            //     }
-            //     __instance.Cards = cards;
-            // }
+                for (int i = 0; i < cards.Count; i++)
+                {
+                    string card = cards[i];
+                    cards[i] = GetRandomCard(__instance, craftableOnly: true).Id;
+                }
+                __instance.Cards = cards;
+            }
 
             if (CorruptStartingDecks.Value || devMode)
             {
