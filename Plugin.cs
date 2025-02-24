@@ -21,7 +21,7 @@ namespace ChaoticCorruptions
 
     // If you have other dependencies, such as obeliskial content, make sure to include them here.
     [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-    [BepInDependency("com.stiffmeds.obeliskialessentials")] // this is the name of the .dll in the !libs folder.
+    // [BepInDependency("com.stiffmeds.obeliskialessentials")] // this is the name of the .dll in the !libs folder.
     [BepInProcess("AcrossTheObelisk.exe")] //Don't change this
 
     // If PluginInfo isn't working, you are either:
@@ -45,6 +45,7 @@ namespace ChaoticCorruptions
         public static ConfigEntry<int> IncreaseCorruptionOdds { get; set; }
         public static ConfigEntry<bool> GuaranteeCorruptCards { get; set; }
         public static ConfigEntry<bool> GuaranteeCorruptItems { get; set; }
+        public static ConfigEntry<bool> CorruptStartingDecks { get; set; }
         public static ConfigEntry<bool> RandomizeStartingDecks { get; set; }
         public static ConfigEntry<bool> CompletelyRandomizeStartingDecks { get; set; }
         public static ConfigEntry<bool> CraftableCorruptions { get; set; }
@@ -70,6 +71,7 @@ namespace ChaoticCorruptions
             IncreaseCorruptionOdds = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "IncreaseCorruptionOdds"), 3, new ConfigDescription("Adds a second roll to corrupt cards/items. 100 will make it guaranteed"));
             GuaranteeCorruptCards = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "GuaranteeCorruptCards"), false, new ConfigDescription("Guarantees all cards are corrupted."));
             GuaranteeCorruptCards = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "GuaranteeCorruptItems"), false, new ConfigDescription("Guarantees all items are corrupted."));
+            CorruptStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CorruptStartingDecks"), true, new ConfigDescription("Forces all starting cards to be corrupted."));
             RandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "RandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all available cards. If guarantee corrupt cards is active, they are all corrupted"));
             CraftableCorruptionsCost = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptionsCost"), 500, new ConfigDescription("The cost added to the regular crafting cost that will be added to the card to craft the corrupted version."));
             CraftableCorruptions = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptions"), false, new ConfigDescription("Makes corrupted cards craftable"));

@@ -14,7 +14,7 @@ namespace ChaoticCorruptions
 
     [HarmonyPatch] // DO NOT REMOVE/CHANGE - This tells your plugin that this is part of the mod
 
-    public class NameYourPluginClass
+    public class ChaoticCorruptions
     {
         // The base game is organized into a large number of classes
         // AtOManager is the class that handles the majority of the game logic.
@@ -29,17 +29,36 @@ namespace ChaoticCorruptions
         // This tells your plugin which base game method to patch and whether it will be a prefix or a postfix
 
         // Prefixes are executed before the original code, postfixes are executed after
+        public static bool devMode = true;
 
         public static int i = 0;
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Functions), "GetCardByRarity")]
-        public static void OverwriteCardPool(ref string __result, CardData _cardData)
+        public static void GetCardByRarityPostfix(ref string __result, CardData _cardData)
         {
-            if(GuaranteeCorruptCards.Value)
+            LogDebug("GetCardByRarityPostfix");
+            if (GuaranteeCorruptCards.Value || devMode)
             {
                 __result = _cardData?.UpgradesToRare?.Id ?? __result;
 
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Hero), "SetInitialCards")]
+        public static void SetInitialCardsPostfix(ref Hero __instance, HeroData heroData)
+        {
+            LogDebug("GetCardByRarityPostfix");
+            if (CorruptStartingDecks.Value || devMode)
+            {
+                List<string> cards = __instance.Cards;
+                for (int i = 0; i < cards.Count; i++)
+                {
+                    string card = cards[i];
+                    cards[i] = Globals.Instance?.GetCardData(card)?.UpgradesToRare?.Id ?? cards[i];
+                }
+                __instance.Cards = cards;
             }
         }
 
@@ -51,7 +70,7 @@ namespace ChaoticCorruptions
             // BeginAdventure
             LogDebug("ShowRewardsPrefix");
             int increasedCorruptionChance = GuaranteeCorruptCards.Value ? 100 : IncreaseCorruptionOdds.Value;
-            if (increasedCorruptionChance == 0 || true)
+            if (increasedCorruptionChance == 0 || devMode)
             {
                 return;
             }
@@ -65,7 +84,7 @@ namespace ChaoticCorruptions
                 }
             }
 
-            if(RandomizeStartingDecks.Value)
+            if (RandomizeStartingDecks.Value)
             {
 
             }
@@ -77,7 +96,7 @@ namespace ChaoticCorruptions
 
         }
 
-       
+
 
     }
 }
