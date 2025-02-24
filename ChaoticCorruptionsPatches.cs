@@ -6,7 +6,9 @@ using HarmonyLib;
 using System;
 using static ChaoticCorruptions.Plugin;
 using static ChaoticCorruptions.CustomFunctions;
+using static ChaoticCorruptions.ChaoticCorruptionsFunctions;
 using System.Collections.Generic;
+using static Functions;
 
 // Make sure your namespace is the same everywhere
 namespace ChaoticCorruptions
@@ -14,7 +16,7 @@ namespace ChaoticCorruptions
 
     [HarmonyPatch] // DO NOT REMOVE/CHANGE - This tells your plugin that this is part of the mod
 
-    public class ChaoticCorruptions
+    public class ChaoticCorruptionsPatches
     {
         // The base game is organized into a large number of classes
         // AtOManager is the class that handles the majority of the game logic.
@@ -50,6 +52,28 @@ namespace ChaoticCorruptions
         public static void SetInitialCardsPostfix(ref Hero __instance, HeroData heroData)
         {
             LogDebug("GetCardByRarityPostfix");
+            UnityEngine.Random.InitState((AtOManager.Instance.GetGameId() + PluginInfo.PLUGIN_GUID).GetDeterministicHashCode());            
+            if (CompletelyRandomizeStartingDecks.Value || devMode)
+            {
+                List<string> cards = __instance.Cards;
+                for (int i = 0; i < cards.Count; i++)
+                {
+                    string card = cards[i];
+                    cards[i] = GetFullyRandomCard(__instance).Id;
+                }
+                __instance.Cards = cards;
+            }
+            else if (RandomizeStartingDecks.Value || devMode)
+            {
+                List<string> cards = __instance.Cards;
+                for (int i = 0; i < cards.Count; i++)
+                {
+                    string card = cards[i];
+                    cards[i] = GetRandomCraftableCard().Id;
+                }
+                __instance.Cards = cards;
+            }
+
             if (CorruptStartingDecks.Value || devMode)
             {
                 List<string> cards = __instance.Cards;
@@ -76,6 +100,7 @@ namespace ChaoticCorruptions
             }
             else
             {
+                UnityEngine.Random.InitState((AtOManager.Instance.GetGameId() + PluginInfo.PLUGIN_GUID + AtOManager.Instance.currentMapNode).GetDeterministicHashCode());
                 int randInt = Functions.Random(0, 100, PluginInfo.PLUGIN_GUID + i);
                 i++;
                 foreach (KeyValuePair<int, string[]> kvp in ___cardsByOrder)
