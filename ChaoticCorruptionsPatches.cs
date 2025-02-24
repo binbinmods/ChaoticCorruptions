@@ -32,7 +32,7 @@ namespace ChaoticCorruptions
         // This tells your plugin which base game method to patch and whether it will be a prefix or a postfix
 
         // Prefixes are executed before the original code, postfixes are executed after
-        public static bool devMode = true;
+        public static bool devMode = DevMode.Value;
 
         public static int i = 0;
 
@@ -53,21 +53,21 @@ namespace ChaoticCorruptions
         public static void GetLootItemsPostfix(ref List<string> __result, string _itemListId, string _idAux = "")
         {
             LogDebug("GetLootItemsPostfix");
-            if (!GuaranteeCorruptItems.Value && !devMode && IncreaseCardCorruptionOdds.Value <= 0)
+            if (!GuaranteeCorruptItems.Value && IncreaseItemCorruptionOdds.Value <= 0 && !devMode)
             {
                 return;
             }
-            LogDebug($"GetLootItemsPostfix - corrupting items ");
             for (int i = 0; i < __result.Count; i++)
             {
                 CardData cardData = Globals.Instance.GetCardData(__result[i]);
                 if (cardData == null) { continue; }
 
+                // LogDebug($"GetLootItemsPostfix - corrupting {cardData.Id} ");
                 bool shouldCorrupt = GuaranteeCorruptItems.Value ||
                     (IncreaseCardCorruptionOdds.Value > 0 &&
-                     UnityEngine.Random.Range(0, 100) <= IncreaseCardCorruptionOdds.Value);
+                     UnityEngine.Random.Range(0, 100) <= IncreaseItemCorruptionOdds.Value);
 
-                if (shouldCorrupt)
+                if (shouldCorrupt || devMode)
                 {
                     __result[i] = cardData?.UpgradesToRare?.Id ?? __result[i];
                 }

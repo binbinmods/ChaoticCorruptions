@@ -55,12 +55,8 @@ namespace ChaoticCorruptions
             int index1 = UnityEngine.Random.Range(0, 2);
             int num10 = UnityEngine.Random.Range(0, 100);
             CardData _cardData = Globals.Instance.GetCardData(index1 < 1 || result2 == Enums.CardClass.None ? stringList1[UnityEngine.Random.Range(0, stringList1.Count)] : stringList2[UnityEngine.Random.Range(0, stringList2.Count)], false);
-            LogDebug($"Inside random card function: {_cardData.Id}");
-            // bool t = true;
-            // if(t)
-            // {
-            //     return _cardData;
-            // }
+            LogDebug($"Randomizing card: {_cardData.Id}");
+
             bool flag2 = true;
             while (flag2)
             {

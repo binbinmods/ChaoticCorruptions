@@ -52,6 +52,7 @@ namespace ChaoticCorruptions
         public static ConfigEntry<bool> CraftableCorruptions { get; set; }
         public static ConfigEntry<int> CraftableCorruptionsCost { get; set; }
         public static ConfigEntry<bool> OnlyCraftCorrupts { get; set; }
+        public static ConfigEntry<bool> DevMode { get; set; }
 
         internal int ModDate = int.Parse(DateTime.Today.ToString("yyyyMMdd"));
         private readonly Harmony harmony = new(PluginInfo.PLUGIN_GUID);
@@ -68,17 +69,18 @@ namespace ChaoticCorruptions
             
             // Sets the title, default values, and descriptions
             EnableMod = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "EnableMod"), true, new ConfigDescription("Enables the mod. If false, the mod will not work then next time you load the game."));
-            EnableDebugging = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "EnableDebugging"), true, new ConfigDescription("Enables the debugging"));
+            EnableDebugging = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "EnableDebugging"), false, new ConfigDescription("Enables the debugging"));
             IncreaseCardCorruptionOdds = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "IncreaseCardCorruptionOdds"), 0, new ConfigDescription("Adds a second roll to corrupt cards. 100 will make it guaranteed"));
             IncreaseItemCorruptionOdds = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "IncreaseItemCorruptionOdds"), 0, new ConfigDescription("Adds a second roll to corrupt items. 100 will make it guaranteed"));
-            GuaranteeCorruptCards = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "GuaranteeCorruptCards"), false, new ConfigDescription("Guarantees all cards are corrupted."));
-            GuaranteeCorruptItems = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "GuaranteeCorruptItems"), false, new ConfigDescription("Guarantees all items are corrupted."));
-            CorruptStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CorruptStartingDecks"), true, new ConfigDescription("Forces all starting cards to be corrupted."));
-            RandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "RandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all craftable cards. If guarantee corrupt cards is active, they are all corrupted"));
-            CompletelyRandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CompletelyRandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all available cards for each hero's class. If guarantee corrupt cards is active, they are all corrupted"));
+            GuaranteeCorruptCards = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "GuaranteeCorruptCards"), false, new ConfigDescription("Guarantees all card rewards are corrupted."));
+            GuaranteeCorruptItems = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "GuaranteeCorruptItems"), false, new ConfigDescription("Guarantees all item rewardss are corrupted."));
+            CorruptStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CorruptStartingDecks"), false, new ConfigDescription("Forces all starting cards to be corrupted."));
+            RandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "RandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all craftable cards. If CorruptStartingDecks is active, they are all corrupted"));
+            CompletelyRandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CompletelyRandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all available cards for each hero's class. If CorruptStartingDecks is active, they are all corrupted"));
             CraftableCorruptionsCost = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptionsCost"), 800, new ConfigDescription("The cost added to the regular crafting cost that will be added to the card to craft the corrupted version."));
-            CraftableCorruptions = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptions"), false, new ConfigDescription("Makes corrupted cards craftable"));
+            CraftableCorruptions = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptions"), true, new ConfigDescription("Makes corrupted cards craftable"));
             OnlyCraftCorrupts = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "OnlyCraftCorrupts"), false, new ConfigDescription("Makes it so that the only cards you can craft are corrupted cards"));
+            DevMode = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "DevMode"), false, new ConfigDescription("Enables all of the things for testing."));
             
 
             // Register with Obeliskial Essentials, delete this if you don't need it.
@@ -92,8 +94,7 @@ namespace ChaoticCorruptions
             // );
 
             // apply patches, this functionally runs all the code for Harmony, running your mod
-            if (EnableMod.Value)
-                harmony.PatchAll();
+            if (EnableMod.Value) {harmony.PatchAll();}
         }
 
 
