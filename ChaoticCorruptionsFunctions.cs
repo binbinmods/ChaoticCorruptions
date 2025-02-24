@@ -15,8 +15,28 @@ namespace ChaoticCorruptions
     public class ChaoticCorruptionsFunctions
     {
 
+        public static bool CanCraftRarity(CardCraftManager __instance, CardData cardData)
+        {
+            CardData cData = cardData;
+            cData = Functions.GetCardDataFromCardData(cData, "");
+            Enums.CardRarity maxCraftRarity = Traverse.Create(__instance).Field("maxCraftRarity")?.GetValue<Enums.CardRarity>() ?? Enums.CardRarity.Epic;
+            if ((bool)(UnityEngine.Object)MapManager.Instance && GameManager.Instance.IsObeliskChallenge())            
+                return maxCraftRarity == Enums.CardRarity.Mythic || maxCraftRarity == Enums.CardRarity.Epic && cData.CardRarity != Enums.CardRarity.Mythic || maxCraftRarity == Enums.CardRarity.Rare && cData.CardRarity != Enums.CardRarity.Mythic && cData.CardRarity != Enums.CardRarity.Epic || maxCraftRarity == Enums.CardRarity.Uncommon && cData.CardRarity != Enums.CardRarity.Mythic && cData.CardRarity != Enums.CardRarity.Epic && cData.CardRarity != Enums.CardRarity.Rare || maxCraftRarity == Enums.CardRarity.Common && cData.CardRarity == Enums.CardRarity.Common;
+            if (AtOManager.Instance.Sandbox_allRarities)
+                return true;
+            if (cData.CardRarity == Enums.CardRarity.Mythic)
+                return false;
+            if (AtOManager.Instance.GetTownTier() == 0)
+            {
+                if (cData.CardRarity == Enums.CardRarity.Rare && (!PlayerManager.Instance.PlayerHaveSupply("townUpgrade_1_4") || AtOManager.Instance.GetNgPlus() >= 8) || cData.CardRarity == Enums.CardRarity.Epic || cData.CardRarity == Enums.CardRarity.Mythic)
+                    return false;
+            }
+            else if (AtOManager.Instance.GetTownTier() == 1 && cData.CardRarity == Enums.CardRarity.Epic && (!PlayerManager.Instance.PlayerHaveSupply("townUpgrade_1_6") || AtOManager.Instance.GetNgPlus() >= 8))
+                return false;
+            return true;
+        }
 
-        public static CardData GetRandomCard(Hero hero, bool craftableOnly = true)
+        public static CardData GetRandomCardWeighted(Hero hero, bool craftableOnly = true)
         {
             int madness = AtOManager.Instance?.GetNgPlus() ?? 0;
             int commonChance = craftableOnly ? (madness < 5 ? 10 : 35) : 30;
