@@ -15,28 +15,32 @@ namespace ChaoticCorruptions
     public class ChaoticCorruptionsFunctions
     {
 
-        public static CardData GetRandomCraftableCard()
-        {
-            return null;
-        }
 
-        public static CardData GetFullyRandomCard(Hero hero)
+        public static CardData GetRandomCard(Hero hero, bool craftableOnly = true)
         {
-            int commonChance = 35;
-            int uncommonChance = 30;
-            int rareChance = 20;
-            int epicChance = 10;
-            // int mythicChance = 5;
-    
+            int madness = AtOManager.Instance?.GetNgPlus() ?? 0;
+            int commonChance = craftableOnly ? (madness < 5 ? 60 : 70) : 35;
+            // int commonChance = craftableOnly ? 70: 35;
+            int uncommonChance = craftableOnly ? (madness < 5 ? 30 : 30) : 30;
+            int rareChance = craftableOnly ? (madness < 5 ? 0 : 0) : 20;
+            int epicChance = craftableOnly ? (madness < 5 ? 0 : 0) : 10;
+            // int mythicChance = craftableOnly ? (madness < 5 ? 0 : 0) : 5;
+
             Enums.CardClass result1 = Enums.CardClass.None;
-            Enum.TryParse<Enums.CardClass>(Enum.GetName(typeof (Enums.HeroClass), (object) hero.HeroData.HeroClass), out result1);
+            Enum.TryParse<Enums.CardClass>(Enum.GetName(typeof(Enums.HeroClass), (object)hero.HeroData.HeroClass), out result1);
             Enums.CardClass result2 = Enums.CardClass.None;
             Enum.TryParse<Enums.CardClass>(Enum.GetName(typeof(Enums.HeroClass), (object)hero.HeroData.HeroSubClass.HeroClassSecondary), out result2);
             List<string> stringList1 = Globals.Instance.CardListNotUpgradedByClass[result1];
             List<string> stringList2 = result2 == Enums.CardClass.None ? new List<string>() : Globals.Instance.CardListNotUpgradedByClass[result2];
-            int index1 = 1;
+            int index1 = UnityEngine.Random.Range(0, 2);
             int num10 = UnityEngine.Random.Range(0, 100);
-            CardData _cardData = Globals.Instance.GetCardData(index1 < 2 || result2 == Enums.CardClass.None ? stringList1[UnityEngine.Random.Range(0, stringList1.Count)] : stringList2[UnityEngine.Random.Range(0, stringList2.Count)], false);
+            CardData _cardData = Globals.Instance.GetCardData(index1 < 1 || result2 == Enums.CardClass.None ? stringList1[UnityEngine.Random.Range(0, stringList1.Count)] : stringList2[UnityEngine.Random.Range(0, stringList2.Count)], false);
+            LogDebug($"Inside random card function: {_cardData.Id}");
+            // bool t = true;
+            // if(t)
+            // {
+            //     return _cardData;
+            // }
             bool flag2 = true;
             while (flag2)
             {
@@ -45,7 +49,7 @@ namespace ChaoticCorruptions
                 while (!flag3)
                 {
                     flag2 = false;
-                    // CardData _cardData = Globals.Instance.GetCardData(index1 < 2 || result2 == Enums.CardClass.None ? stringList1[UnityEngine.Random.Range(0, stringList1.Count)] : stringList2[UnityEngine.Random.Range(0, stringList2.Count)], false);
+                    _cardData = Globals.Instance.GetCardData(index1 < 1 || result2 == Enums.CardClass.None ? stringList1[UnityEngine.Random.Range(0, stringList1.Count)] : stringList2[UnityEngine.Random.Range(0, stringList2.Count)], false);
                     if (!flag2)
                     {
                         if (num10 < commonChance)

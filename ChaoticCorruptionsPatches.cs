@@ -9,6 +9,7 @@ using static ChaoticCorruptions.CustomFunctions;
 using static ChaoticCorruptions.ChaoticCorruptionsFunctions;
 using System.Collections.Generic;
 using static Functions;
+using UnityEngine;
 
 // Make sure your namespace is the same everywhere
 namespace ChaoticCorruptions
@@ -48,35 +49,75 @@ namespace ChaoticCorruptions
         }
 
         [HarmonyPostfix]
+        [HarmonyPatch(typeof(Loot), "GetLootItems")]//, [typeof(string), typeof(string)])]
+        public static void GetLootItemsPostfix(ref List<string> __result, string _itemListId, string _idAux = "")
+        {
+            LogDebug("GetLootItemsPostfix");
+            if (!GuaranteeCorruptItems.Value && !devMode && IncreaseCardCorruptionOdds.Value <= 0)
+            {
+                return;
+            }
+            LogDebug($"GetLootItemsPostfix - corrupting items ");
+            for (int i = 0; i < __result.Count; i++)
+            {
+                CardData cardData = Globals.Instance.GetCardData(__result[i]);
+                if (cardData == null) { continue; }
+
+                bool shouldCorrupt = GuaranteeCorruptItems.Value ||
+                    (IncreaseCardCorruptionOdds.Value > 0 &&
+                     UnityEngine.Random.Range(0, 100) <= IncreaseCardCorruptionOdds.Value);
+
+                if (shouldCorrupt)
+                {
+                    __result[i] = cardData?.UpgradesToRare?.Id ?? __result[i];
+                }
+            }
+            // __result[i] = Globals.Instance?.GetCardData(__result[i]) ??__result[i];
+
+        }
+
+        [HarmonyPostfix]
         [HarmonyPatch(typeof(Hero), "SetInitialCards")]
         public static void SetInitialCardsPostfix(ref Hero __instance, HeroData heroData)
         {
-            LogDebug("GetCardByRarityPostfix");
-            UnityEngine.Random.InitState((AtOManager.Instance.GetGameId() + PluginInfo.PLUGIN_GUID).GetDeterministicHashCode());            
-            if (CompletelyRandomizeStartingDecks.Value || devMode)
-            {
-                List<string> cards = __instance.Cards;
-                for (int i = 0; i < cards.Count; i++)
-                {
-                    string card = cards[i];
-                    cards[i] = GetFullyRandomCard(__instance).Id;
-                }
-                __instance.Cards = cards;
-            }
-            else if (RandomizeStartingDecks.Value || devMode)
-            {
-                List<string> cards = __instance.Cards;
-                for (int i = 0; i < cards.Count; i++)
-                {
-                    string card = cards[i];
-                    cards[i] = GetRandomCraftableCard().Id;
-                }
-                __instance.Cards = cards;
-            }
+            LogDebug("SetInitialCardsPostfix");
+            UnityEngine.Random.InitState((AtOManager.Instance.GetGameId() + __instance.SourceName + PluginInfo.PLUGIN_GUID).GetDeterministicHashCode());
+            List<string> cards = __instance.Cards;
+            // if (CompletelyRandomizeStartingDecks.Value || devMode)
+            // {
+                
+            //     LogDebug($"SetInitialCardsPostfix - randomizing {__instance.SourceName}");
+
+            //     for (int i = 0; i < cards.Count; i++)
+            //     {
+            //         string card = cards[i];
+            //         LogDebug(card);
+            //         if (Globals.Instance.GetCardData(card).Starter || Globals.Instance.GetCardData(card) == null)
+            //         {
+            //             continue;
+            //         }
+            //         LogDebug("past check");
+            //         string newCard = GetRandomCard(__instance, craftableOnly: false).Id;
+            //         LogDebug($"newCard {newCard}");
+            //         cards[i] = newCard;
+            //     }
+            //     __instance.Cards = cards;
+            // }
+            // else if (RandomizeStartingDecks.Value || devMode)
+            // {
+                
+            //     for (int i = 0; i < cards.Count; i++)
+            //     {
+            //         string card = cards[i];
+            //         cards[i] = GetRandomCard(__instance, craftableOnly: true).Id;
+            //     }
+            //     __instance.Cards = cards;
+            // }
 
             if (CorruptStartingDecks.Value || devMode)
             {
-                List<string> cards = __instance.Cards;
+                LogDebug($"SetInitialCardsPostfix - corrupting {__instance.SourceName}");
+                // List<string> cards = __instance.Cards;
                 for (int i = 0; i < cards.Count; i++)
                 {
                     string card = cards[i];
@@ -93,7 +134,7 @@ namespace ChaoticCorruptions
         {
             // BeginAdventure
             LogDebug("ShowRewardsPrefix");
-            int increasedCorruptionChance = GuaranteeCorruptCards.Value ? 100 : IncreaseCorruptionOdds.Value;
+            int increasedCorruptionChance = GuaranteeCorruptCards.Value ? 100 : IncreaseCardCorruptionOdds.Value;
             if (increasedCorruptionChance == 0 || devMode)
             {
                 return;
