@@ -163,6 +163,36 @@ namespace ChaoticCorruptions
 
         }
 
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(CardCraftManager), "CanCraftThisCard")]
+        public static void CanCraftThisCardPostfix(ref bool __result, CardData cData)
+        {        
+            LogDebug("CanCraftThisCardPostfix");    
+            if ((CraftableCorruptions.Value || devMode) && cData.CardUpgraded == Enums.CardUpgraded.Rare) {__result = true;}
+
+            if ((OnlyCraftCorrupts.Value || devMode) && cData.CardUpgraded == Enums.CardUpgraded.Rare) {__result = true;}
+            else{__result = false;}
+                
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Globals), "GetCraftCost")]
+        public static void GetCraftCostPostfix(ref int __result, string cardId, float discountCraft = 0.0f, float discountUpgrade = 0.0f, int zoneTier = 0)
+        {
+            LogDebug($"GetCraftCostPostfix - {cardId}");    
+            if ((CraftableCorruptionsCost.Value <= 0 || !CraftableCorruptions.Value) && !devMode){return;}
+                
+            CardData cardData = Globals.Instance.GetCardData(cardId);
+            if(cardData == null || cardData.CardUpgraded != Enums.CardUpgraded.Rare) {return;}
+            
+            int costToAdd = CraftableCorruptionsCost.Value;
+            costToAdd -= Functions.FuncRoundToInt(costToAdd * discountUpgrade);
+            costToAdd += Functions.FuncRoundToInt((float) ((double) costToAdd * (double) AtOManager.Instance.Sandbox_cardCraftPrice * 0.0099999997764825821));
+            
+            __result += costToAdd;
+
+        }
+
 
 
     }

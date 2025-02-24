@@ -57,7 +57,7 @@ namespace ChaoticCorruptions
         private readonly Harmony harmony = new(PluginInfo.PLUGIN_GUID);
         internal static ManualLogSource Log;
 
-        public static string debugBase = PluginInfo.PLUGIN_GUID;
+        public static string debugBase = $"{PluginInfo.PLUGIN_GUID} ";
 
         private void Awake()
         {
@@ -76,7 +76,7 @@ namespace ChaoticCorruptions
             CorruptStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CorruptStartingDecks"), true, new ConfigDescription("Forces all starting cards to be corrupted."));
             RandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "RandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all craftable cards. If guarantee corrupt cards is active, they are all corrupted"));
             CompletelyRandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CompletelyRandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all available cards for each hero's class. If guarantee corrupt cards is active, they are all corrupted"));
-            CraftableCorruptionsCost = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptionsCost"), 500, new ConfigDescription("The cost added to the regular crafting cost that will be added to the card to craft the corrupted version."));
+            CraftableCorruptionsCost = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptionsCost"), 800, new ConfigDescription("The cost added to the regular crafting cost that will be added to the card to craft the corrupted version."));
             CraftableCorruptions = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptions"), false, new ConfigDescription("Makes corrupted cards craftable"));
             OnlyCraftCorrupts = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "OnlyCraftCorrupts"), false, new ConfigDescription("Makes it so that the only cards you can craft are corrupted cards"));
             
