@@ -1,6 +1,10 @@
+# 0.6.0
+
+Fixed bug where no cards were able to be crafted unless OnlyCraftCorrupt was checked
+
 # 0.5.0
 
-Initial Pre-release, added singularity support
+Initial Pre-release, enabled singularity support
 
 # 0.4.0
 

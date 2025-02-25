@@ -39,10 +39,10 @@ namespace ChaoticCorruptions
         public static CardData GetRandomCardWeighted(Hero hero, bool craftableOnly = true)
         {
             int madness = AtOManager.Instance?.GetNgPlus() ?? 0;
-            int commonChance = craftableOnly ? (madness < 5 ? 10 : 35) : 30;
+            int commonChance = craftableOnly ? (madness < 5 ? 10 : 37) : 30;
             // int commonChance = craftableOnly ? 70: 35;
             int uncommonChance = craftableOnly ? (madness < 5 ? 65 : 60) : 35;
-            int rareChance = craftableOnly ? (madness < 5 ? 20 : 5) : 20;
+            int rareChance = craftableOnly ? (madness < 5 ? 20 : 3) : 20;
             int epicChance = craftableOnly ? (madness < 5 ? 5 : 0) : 10;
             // int mythicChance = craftableOnly ? (madness < 5 ? 0 : 0) : 5;
 

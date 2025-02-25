@@ -1,6 +1,8 @@
 # Chaotic Corruptions
 
-This is a simple mod that enables the following configs:
+This is a simple mod that enables the following configs aimed at randomizing or adding corrupted cards/items to your runs:
+
+This has not been tested in multiplayer yet, so let me know if there are any issues!
 
 | Config    | Default | Explanation |
 | :------ | :----: | :--------- |

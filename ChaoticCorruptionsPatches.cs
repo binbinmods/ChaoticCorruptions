@@ -85,7 +85,7 @@ namespace ChaoticCorruptions
             List<string> cards = __instance.Cards;
             if (CompletelyRandomizeStartingDecks.Value || devMode)
             {
-                
+
                 LogDebug($"SetInitialCardsPostfix - randomizing {__instance.SourceName}");
 
                 for (int i = 0; i < cards.Count; i++)
@@ -106,7 +106,7 @@ namespace ChaoticCorruptions
             else if (RandomizeStartingDecks.Value || devMode)
             // if (RandomizeStartingDecks.Value || devMode)
             {
-                
+
                 for (int i = 0; i < cards.Count; i++)
                 {
                     string card = cards[i];
@@ -138,7 +138,7 @@ namespace ChaoticCorruptions
             List<string> cards = __instance.Cards;
             if (CompletelyRandomizeStartingDecks.Value || devMode)
             {
-                
+
                 LogDebug($"SetInitialCardsPostfix - randomizing {__instance.SourceName}");
 
                 for (int i = 0; i < cards.Count; i++)
@@ -159,7 +159,7 @@ namespace ChaoticCorruptions
             else if (RandomizeStartingDecks.Value || devMode)
             // if (RandomizeStartingDecks.Value || devMode)
             {
-                
+
                 for (int i = 0; i < cards.Count; i++)
                 {
                     string card = cards[i];
@@ -218,47 +218,103 @@ namespace ChaoticCorruptions
         [HarmonyPostfix]
         [HarmonyPatch(typeof(CardCraftManager), "CanCraftThisCard")]
         public static void CanCraftThisCardPostfix(ref CardCraftManager __instance, ref bool __result, CardData cData)
-        {        
+        {
             // LogDebug("CanCraftThisCardPostfix");    
-            if ((CraftableCorruptions.Value || devMode) && cData.CardUpgraded == Enums.CardUpgraded.Rare && CanCraftRarity(__instance, cData)) {__result = true;}
+            if ((CraftableCorruptions.Value || devMode) && cData.CardUpgraded == Enums.CardUpgraded.Rare && CanCraftRarity(__instance, cData))
+            { 
+                __result = true; 
+                return; 
+            }
 
-            if ((OnlyCraftCorrupts.Value || devMode) && cData.CardUpgraded == Enums.CardUpgraded.Rare && CanCraftRarity(__instance, cData)) {__result = true;}
-            else{__result = false;}
-                
+            if(OnlyCraftCorrupts.Value || devMode)
+            {
+                 if (cData.CardUpgraded == Enums.CardUpgraded.Rare && CanCraftRarity(__instance, cData))
+                { 
+                    __result = true; 
+                }
+                else 
+                { 
+                    __result = false; 
+                }
+            }
+
+           
+
         }
 
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(CardCraftManager), nameof(CardCraftManager.ShowCardCraft))]
         public static void ShowCardCraftPostfix(CardCraftManager __instance, BotonAdvancedCraft ___buttonAdvancedCraft)
-        {        
-            LogDebug("ShowCardCraftPostfix");    
+        {
+            LogDebug("ShowCardCraftPostfix");
             if (OnlyCraftCorrupts.Value || devMode)
             {
-                LogDebug("ShowCardCraftPostfix - setting Active");   
+                LogDebug("ShowCardCraftPostfix - setting Active");
                 __instance.AdvancedCraft(change: true);
                 // ___buttonAdvancedCraft.gameObject.SetActive(true);
-            }                            
+            }
         }
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Globals), "GetCraftCost")]
         public static void GetCraftCostPostfix(ref int __result, string cardId, float discountCraft = 0.0f, float discountUpgrade = 0.0f, int zoneTier = 0)
         {
-            LogDebug($"GetCraftCostPostfix - {cardId}");    
-            if ((CraftableCorruptionsCost.Value <= 0 || !CraftableCorruptions.Value) && !devMode){return;}
-                
+            LogDebug($"GetCraftCostPostfix - {cardId}");
+            if ((CraftableCorruptionsCost.Value <= 0 || !CraftableCorruptions.Value) && !devMode) { return; }
+
             CardData cardData = Globals.Instance.GetCardData(cardId);
-            if(cardData == null || cardData.CardUpgraded != Enums.CardUpgraded.Rare) {return;}
-            
+            if (cardData == null || cardData.CardUpgraded != Enums.CardUpgraded.Rare) { return; }
+
             int costToAdd = CraftableCorruptionsCost.Value;
             costToAdd -= Functions.FuncRoundToInt(costToAdd * discountUpgrade);
-            costToAdd += Functions.FuncRoundToInt((float) ((double) costToAdd * (double) AtOManager.Instance.Sandbox_cardCraftPrice * 0.0099999997764825821));
-            
+            costToAdd += Functions.FuncRoundToInt((float)((double)costToAdd * (double)AtOManager.Instance.Sandbox_cardCraftPrice * 0.0099999997764825821));
+
             __result += costToAdd;
 
         }
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(SteamManager), "SetObeliskScore")]
+        public static bool SetObeliskScorePrefix(ref SteamManager __instance, int score, bool singleplayer = true)
+        {
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(SteamManager), "SetScore")]
+        public static bool SetScorePrefix(ref SteamManager __instance, int score, bool singleplayer = true)
+        {
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(SteamManager), "SetSingularityScore")]
+        public static bool SetSingularityScorePrefix(ref SteamManager __instance, int score, bool singleplayer = true)
+        {
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(SteamManager), "SetObeliskScoreLeaderboard")]
+        public static bool SetObeliskScoreLeaderboardPrefix(ref SteamManager __instance, int score, bool singleplayer = true)
+        {
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(SteamManager), "SetScoreLeaderboard")]
+        public static bool SetScoreLeaderboardPrefix(ref SteamManager __instance, int score, bool singleplayer = true)
+        {
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(SteamManager), "SetSingularityScoreLeaderboard")]
+        public static bool SetSingularityScoreLeaderboardPrefix(ref SteamManager __instance, int score, bool singleplayer = true)
+        {
+            return false;
+        }
 
 
     }
