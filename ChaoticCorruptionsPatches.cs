@@ -10,6 +10,7 @@ using static ChaoticCorruptions.ChaoticCorruptionsFunctions;
 using System.Collections.Generic;
 using static Functions;
 using UnityEngine;
+using System.ComponentModel;
 
 // Make sure your namespace is the same everywhere
 namespace ChaoticCorruptions
@@ -32,7 +33,7 @@ namespace ChaoticCorruptions
         // This tells your plugin which base game method to patch and whether it will be a prefix or a postfix
 
         // Prefixes are executed before the original code, postfixes are executed after
-        public static bool devMode = DevMode.Value;
+        public static bool devMode = true;//DevMode.Value;
 
         public static int i = 0;
 
@@ -41,7 +42,7 @@ namespace ChaoticCorruptions
         public static void GetCardByRarityPostfix(ref string __result, CardData _cardData)
         {
             LogDebug("GetCardByRarityPostfix");
-            if (GuaranteeCorruptCards.Value || devMode)
+            if (GuaranteeCorruptCards.Value || devMode || UnityEngine.Random.Range(0, 100) <= IncreaseCardCorruptionOdds.Value)
             {
                 __result = _cardData?.UpgradesToRare?.Id ?? __result;
 
@@ -64,7 +65,7 @@ namespace ChaoticCorruptions
 
                 // LogDebug($"GetLootItemsPostfix - corrupting {cardData.Id} ");
                 bool shouldCorrupt = GuaranteeCorruptItems.Value ||
-                    (IncreaseCardCorruptionOdds.Value > 0 &&
+                    (IncreaseItemCorruptionOdds.Value > 0 &&
                      UnityEngine.Random.Range(0, 100) <= IncreaseItemCorruptionOdds.Value);
 
                 if (shouldCorrupt || devMode)
@@ -76,12 +77,25 @@ namespace ChaoticCorruptions
 
         }
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Hero), "SetInitialItems")]
+        public static void SetInitialItemsPrefix(ref Hero __instance, ref CardData _cardData, ref int _rankLevel)
+        {
+            LogDebug($"SetInitialItemsPrefix {_cardData.Id}");
+            if (_cardData.Id == "harley") { return; }
+            if (CorruptStartingItems.Value || devMode)
+            {
+                _cardData = _cardData?.UpgradesToRare ?? _cardData;
+                _rankLevel = 0;
+            }
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Hero), "SetInitialCards")]
         public static void SetInitialCardsPostfix(ref Hero __instance, HeroData heroData)
         {
             LogDebug("SetInitialCardsPostfix");
-            UnityEngine.Random.InitState((AtOManager.Instance.GetGameId() + __instance.SourceName + PluginInfo.PLUGIN_GUID).GetDeterministicHashCode());
+            // UnityEngine.Random.InitState((AtOManager.Instance.GetGameId() + __instance.SourceName + PluginInfo.PLUGIN_GUID).GetDeterministicHashCode());
             List<string> cards = __instance.Cards;
             if (CompletelyRandomizeStartingDecks.Value || devMode)
             {
@@ -181,39 +195,33 @@ namespace ChaoticCorruptions
             }
         }
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(RewardsManager), "ShowRewards")]
-        public static void ShowRewardsPrefix(RewardsManager __instance, Dictionary<int, string[]> ___cardsByOrder)
-        {
-            // BeginAdventure
-            LogDebug("ShowRewardsPrefix");
-            int increasedCorruptionChance = GuaranteeCorruptCards.Value ? 100 : IncreaseCardCorruptionOdds.Value;
-            if (increasedCorruptionChance == 0 || devMode)
-            {
-                return;
-            }
-            else
-            {
-                UnityEngine.Random.InitState((AtOManager.Instance.GetGameId() + PluginInfo.PLUGIN_GUID + AtOManager.Instance.currentMapNode).GetDeterministicHashCode());
-                int randInt = Functions.Random(0, 100, PluginInfo.PLUGIN_GUID + i);
-                i++;
-                foreach (KeyValuePair<int, string[]> kvp in ___cardsByOrder)
-                {
-                    // Globals.Instance.Cardlist
-                }
-            }
+        // [HarmonyPrefix]
+        // [HarmonyPatch(typeof(RewardsManager), "ShowRewards")]
+        // public static void ShowRewardsPrefix(RewardsManager __instance, Dictionary<int, string[]> ___cardsByOrder)
+        // {
 
-            if (RandomizeStartingDecks.Value)
-            {
+        //     return;
 
-            }
+        // }
 
-
-
-
-            return;
-
-        }
+        // [HarmonyPostfix]
+        // [HarmonyPatch(typeof(CardCraftManager), "SetPrice")]
+        // public static void SetPricePostfix(ref CardCraftManager __instance, ref int __result,
+        //                                             bool ___isPetShop,
+        //                                             string function,
+        //                                             string rarity,
+        //                                             string cardName = "",
+        //                                             int zoneTier = 0,
+        //                                             bool useShopDiscount = true)
+        // {
+        //     LogDebug($"SetPricePostfix");
+        //     bool isRare = Globals.Instance.GetCardData(cardName).CardUpgraded == Enums.CardUpgraded.Rare;
+        //     if (___isPetShop && (PurchaseableCorruptPets.Value || devMode) && isRare)
+        //     {
+        //         LogDebug($"SetPricePostfix - {cardName}");
+        //         __result *= PurchaseableCorruptPetsMultiplier.Value;
+        //     }
+        // }
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(CardCraftManager), "CanCraftThisCard")]
@@ -221,24 +229,24 @@ namespace ChaoticCorruptions
         {
             // LogDebug("CanCraftThisCardPostfix");    
             if ((CraftableCorruptions.Value || devMode) && cData.CardUpgraded == Enums.CardUpgraded.Rare && CanCraftRarity(__instance, cData))
-            { 
-                __result = true; 
-                return; 
-            }
-
-            if(OnlyCraftCorrupts.Value || devMode)
             {
-                 if (cData.CardUpgraded == Enums.CardUpgraded.Rare && CanCraftRarity(__instance, cData))
-                { 
-                    __result = true; 
+                __result = true;
+                return;
+            }
+
+            if (OnlyCraftCorrupts.Value || devMode)
+            {
+                if (cData.CardUpgraded == Enums.CardUpgraded.Rare && CanCraftRarity(__instance, cData))
+                {
+                    __result = true;
                 }
-                else 
-                { 
-                    __result = false; 
+                else
+                {
+                    __result = false;
                 }
             }
 
-           
+
 
         }
 
@@ -248,13 +256,26 @@ namespace ChaoticCorruptions
         public static void ShowCardCraftPostfix(CardCraftManager __instance, BotonAdvancedCraft ___buttonAdvancedCraft)
         {
             LogDebug("ShowCardCraftPostfix");
-            if (OnlyCraftCorrupts.Value || devMode)
+            if ((OnlyCraftCorrupts.Value || devMode) && __instance.craftType == 2)
             {
                 LogDebug("ShowCardCraftPostfix - setting Active");
                 __instance.AdvancedCraft(change: true);
                 // ___buttonAdvancedCraft.gameObject.SetActive(true);
             }
         }
+        // [HarmonyPostfix]
+        // [HarmonyPatch(typeof(CardCraftManager), nameof(CardCraftManager.ShowItemsForBuy))]
+        // public static void ShowItemsForBuyPostfix(CardCraftManager __instance, bool ___isPetShop, int pageNum = 1, string itemBought = "")
+        // {
+        //     LogDebug("ShowItemsForBuyPostfix");
+        //     if ((PurchaseableCorruptPets.Value && ___isPetShop) || devMode)
+        //     {
+        //         LogDebug("ShowItemsForBuyPostfix - pet shop");
+        //         __instance.AdvancedCraft(change: true);
+        //         // ___buttonAdvancedCraft.gameObject.SetActive(true);
+        //     }
+        // }
+
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Globals), "GetCraftCost")]

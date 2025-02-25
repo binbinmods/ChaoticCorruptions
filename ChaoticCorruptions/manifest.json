@@ -1,6 +1,6 @@
 {
     "name": "Chaotic_Corruptions",
-    "version_number": "0.6.0",
+    "version_number": "0.7.0",
     "website_url": "https://github.com/binbinmods/ChaoticCorruptions",
     "description": "Provides configs to Randomize or Corrupt starter cards and items.",
     "dependencies": [

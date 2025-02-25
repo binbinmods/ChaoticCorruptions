@@ -47,10 +47,13 @@ namespace ChaoticCorruptions
         public static ConfigEntry<bool> GuaranteeCorruptCards { get; set; }
         public static ConfigEntry<bool> GuaranteeCorruptItems { get; set; }
         public static ConfigEntry<bool> CorruptStartingDecks { get; set; }
+        public static ConfigEntry<bool> CorruptStartingItems { get; set; }
         public static ConfigEntry<bool> RandomizeStartingDecks { get; set; }
         public static ConfigEntry<bool> CompletelyRandomizeStartingDecks { get; set; }
         public static ConfigEntry<bool> CraftableCorruptions { get; set; }
         public static ConfigEntry<int> CraftableCorruptionsCost { get; set; }
+        public static ConfigEntry<bool> PurchaseableCorruptPets { get; set; }
+        public static ConfigEntry<int> PurchaseableCorruptPetsMultiplier { get; set; }
         public static ConfigEntry<bool> OnlyCraftCorrupts { get; set; }
         public static ConfigEntry<bool> DevMode { get; set; }
 
@@ -75,10 +78,13 @@ namespace ChaoticCorruptions
             GuaranteeCorruptCards = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "GuaranteeCorruptCards"), false, new ConfigDescription("Guarantees all card rewards are corrupted."));
             GuaranteeCorruptItems = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "GuaranteeCorruptItems"), false, new ConfigDescription("Guarantees all item rewardss are corrupted."));
             CorruptStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CorruptStartingDecks"), false, new ConfigDescription("Forces all starting cards to be corrupted."));
+            CorruptStartingItems = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CorruptStartingItems"), false, new ConfigDescription("Forces all starting items to be corrupted."));
             RandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "RandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all craftable cards. If CorruptStartingDecks is active, they are all corrupted"));
             CompletelyRandomizeStartingDecks = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CompletelyRandomizeStartingDecks"), true, new ConfigDescription("Randomizes starting decks from all available cards for each hero's class. If CorruptStartingDecks is active, they are all corrupted"));
-            CraftableCorruptionsCost = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptionsCost"), 800, new ConfigDescription("The cost added to the regular crafting cost that will be added to the card to craft the corrupted version."));
             CraftableCorruptions = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptions"), true, new ConfigDescription("Makes corrupted cards craftable"));
+            CraftableCorruptionsCost = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "CraftableCorruptionsCost"), 800, new ConfigDescription("The cost added to the regular crafting cost that will be added to the card to craft the corrupted version."));
+            // PurchaseableCorruptPets = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "PurchaseableCorruptPets"), false, new ConfigDescription("Makes corrupted cards craftable"));
+            // PurchaseableCorruptPetsMultiplier = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "PurchaseableCorruptPetsMultiplier"), 200, new ConfigDescription("The how much the corrupt pets cost relative to regular pets. So 200 would be twice the price"));
             OnlyCraftCorrupts = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "OnlyCraftCorrupts"), false, new ConfigDescription("Makes it so that the only cards you can craft are corrupted cards"));
             DevMode = Config.Bind(new ConfigDefinition(PluginInfo.PLUGIN_NAME, "DevMode"), false, new ConfigDescription("Enables all of the things for testing."));
             

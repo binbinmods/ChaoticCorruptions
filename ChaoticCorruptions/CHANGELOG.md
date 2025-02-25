@@ -1,3 +1,11 @@
+# 0.7.0
+
+Added config to corrupt starting items.
+
+Fixed bug with IncreasedCorruptionOdds
+
+Fixed a bug with the first seed of the play-session sometimes being the same
+
 # 0.6.0
 
 Fixed bug where no cards were able to be crafted unless OnlyCraftCorrupt was checked
