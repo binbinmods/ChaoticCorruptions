@@ -23,6 +23,16 @@ This has not been tested in multiplayer yet, so let me know if there are any iss
 | PurchasableCorruptPetsMultiplier (WIP) | 200 |   The how much the corrupt pets cost relative to regular pets. So 200 would be twice the price.   |
 | DevMode | false |   Enables all of the things for testing   |
 
+
+## Installation (manual)
+
+1. Download and install [BepInEx](https://thunderstore.io/c/across-the-obelisk/p/BepInEx/BepInExPack_AcrossTheObelisk/)
+2. Click _Manual Download_ at the top of the page.
+3. In Steam, right-click Across the Obelisk and select _Manage_->_Browse local files_.
+4. Extract the archive into the game folder. Your _Across the Obelisk_ folder should now contain a _BepInEx_ folder and a _doorstop\_libs_ folder.
+5. Run the game.
+6. Press F5 to open/close the Config Manager 
+
 ## Installation (automatic)
 
 1. Download and install [Thunderstore Mod Manager](https://www.overwolf.com/app/Thunderstore-Thunderstore_Mod_Manager) or [r2modman](https://across-the-obelisk.thunderstore.io/package/ebkr/r2modman/).

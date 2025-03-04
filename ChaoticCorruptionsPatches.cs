@@ -33,7 +33,7 @@ namespace ChaoticCorruptions
         // This tells your plugin which base game method to patch and whether it will be a prefix or a postfix
 
         // Prefixes are executed before the original code, postfixes are executed after
-        public static bool devMode = true;//DevMode.Value;
+        public static bool devMode = DevMode.Value;
 
         public static int i = 0;
 

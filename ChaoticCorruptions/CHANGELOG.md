@@ -1,8 +1,14 @@
+# 0.8.0
+
+
+
 # 0.7.0
 
 Added config to corrupt starting items.
 
 Fixed bug with IncreasedCorruptionOdds
+
+Fixed a bug where the armory wouldn't appear until you click on a different hero/tab.
 
 Fixed a bug with the first seed of the play-session sometimes being the same
 
