@@ -124,6 +124,10 @@ namespace ChaoticCorruptions
                 for (int i = 0; i < cards.Count; i++)
                 {
                     string card = cards[i];
+                    if (Globals.Instance.GetCardData(card).Starter || Globals.Instance.GetCardData(card) == null)
+                    {
+                        continue;
+                    }
                     cards[i] = GetRandomCardWeighted(__instance, craftableOnly: true).Id;
                 }
                 __instance.Cards = cards;
@@ -135,13 +139,15 @@ namespace ChaoticCorruptions
                 // List<string> cards = __instance.Cards;
                 for (int i = 0; i < cards.Count; i++)
                 {
+                    
                     string card = cards[i];
+                    
                     cards[i] = Globals.Instance?.GetCardData(card)?.UpgradesToRare?.Id ?? cards[i];
                 }
                 __instance.Cards = cards;
             }
 
-            if (true)//ChaoticStartingDeck.Value || devMode)
+            if (ChaoticStartingDeck.Value || devMode)
             {
 
                 LogDebug($"SetInitialCardsPostfix - Pandoras Box");
@@ -403,12 +409,12 @@ namespace ChaoticCorruptions
             newCardRare.CardType = Enums.CardType.Skill;
             newCardRare.AddCard = 1;
             newCardRare.RelatedCard = "";
-            newCardRare.AddCardChoose = 8;
+            newCardRare.AddCardChoose = 10;
             newCardRare.CardName = "CHAOS!";
             newCardRare.AddCardVanish = false;
             newCardRare.AddCardPlace = Enums.CardPlace.Hand;
             newCardRare.CardUpgraded = Enums.CardUpgraded.Rare;
-            newCardRare.CardRarity = Enums.CardRarity.Epic;
+            newCardRare.CardRarity = Enums.CardRarity.Mythic;
             newCardRare.Playable = true;
 
             InitNewCard(newCard, ref ____CardItemByType, ref ____CardListByType, ref ____CardListByClass, ref ____CardListNotUpgraded, ref ____CardListNotUpgradedByClass, ref ____CardListByClassType, ref ____CardEnergyCost);

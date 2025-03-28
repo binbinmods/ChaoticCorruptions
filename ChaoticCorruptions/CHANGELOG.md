@@ -1,6 +1,8 @@
 # 0.9.0
 
-Added the option to replace your starting deck with Chaos or CHAOS that allows you to randomly generate cards.
+Added Pandora's Box option to replace your starting deck with Chaos or CHAOS that allows you to randomly generate cards.
+
+All modes now should preserve your starting card.
 
 # 0.8.0
 
