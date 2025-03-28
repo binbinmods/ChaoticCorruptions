@@ -140,6 +140,27 @@ namespace ChaoticCorruptions
                 }
                 __instance.Cards = cards;
             }
+
+            if (true)//ChaoticStartingDeck.Value || devMode)
+            {
+
+                LogDebug($"SetInitialCardsPostfix - Pandoras Box");
+
+                for (int i = 0; i < cards.Count; i++)
+                {
+                    string card = cards[i];
+                    LogDebug(card);
+                    if (Globals.Instance.GetCardData(card).Starter || Globals.Instance.GetCardData(card) == null)
+                    {
+                        continue;
+                    }
+                    LogDebug("past check");
+                    string newCard = CorruptStartingDecks.Value ? "chaoticchaosrare" : "chaoticchaos";
+                    LogDebug($"newCard {newCard}");
+                    cards[i] = newCard;
+                }
+                __instance.Cards = cards;
+            }
         }
 
 
@@ -181,6 +202,8 @@ namespace ChaoticCorruptions
                 }
                 __instance.Cards = cards;
             }
+
+
 
             if (CorruptStartingDecks.Value || devMode)
             {
@@ -335,6 +358,63 @@ namespace ChaoticCorruptions
         public static bool SetSingularityScoreLeaderboardPrefix(ref SteamManager __instance, int score, bool singleplayer = true)
         {
             return false;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Globals), nameof(Globals.CreateGameContent))]
+        public static void CreateGameContent(ref Globals __instance,
+        ref Dictionary<string, CardData> ____CardsSource,
+        ref Dictionary<string, CardData> ____Cards,
+        ref Dictionary<Enums.CardType, List<string>> ____CardItemByType,
+        ref Dictionary<Enums.CardType, List<string>> ____CardListByType,
+        ref Dictionary<Enums.CardClass, List<string>> ____CardListByClass,
+        ref List<string> ____CardListNotUpgraded,
+        ref Dictionary<Enums.CardClass, List<string>> ____CardListNotUpgradedByClass,
+        ref Dictionary<string, List<string>> ____CardListByClassType,
+        ref Dictionary<string, int> ____CardEnergyCost
+        )
+        {
+            
+            string cardId = "chaos";
+            // string cardToCloneFrom = "divineguidancerare";
+            string cardToCloneFrom = "lasthope";
+            CardData newCard = AddNewCard($"chaotic{cardId}", cardToCloneFrom, ref ____CardsSource, ref ____Cards);
+
+            newCard.UpgradedFrom = "";
+            newCard.CardClass = Enums.CardClass.Special;
+            newCard.EnergyCost = 0;
+            newCard.CardType = Enums.CardType.Skill;
+            newCard.AddCard = 1;
+            newCard.AddCardChoose = 6;
+            newCard.AddCardVanish = false;
+            newCard.AddCardReducedCost = 0;
+            newCard.AddCardPlace = Enums.CardPlace.Hand;
+            newCard.CardName = "Chaos";
+            newCard.CardUpgraded = Enums.CardUpgraded.Rare;
+            newCard.CardRarity = Enums.CardRarity.Epic;
+            newCard.Playable = true;
+
+            string cardIdrare = "chaosrare";
+            CardData newCardRare = AddNewCard($"chaotic{cardIdrare}", cardToCloneFrom, ref ____CardsSource, ref ____Cards);
+
+            newCardRare.UpgradedFrom = "";
+            newCardRare.CardClass = Enums.CardClass.Special;
+            newCardRare.EnergyCost = 0;
+            newCardRare.CardType = Enums.CardType.Skill;
+            newCardRare.AddCard = 1;
+            newCardRare.RelatedCard = "";
+            newCardRare.AddCardChoose = 8;
+            newCardRare.CardName = "CHAOS!";
+            newCardRare.AddCardVanish = false;
+            newCardRare.AddCardPlace = Enums.CardPlace.Hand;
+            newCardRare.CardUpgraded = Enums.CardUpgraded.Rare;
+            newCardRare.CardRarity = Enums.CardRarity.Epic;
+            newCardRare.Playable = true;
+
+            InitNewCard(newCard, ref ____CardItemByType, ref ____CardListByType, ref ____CardListByClass, ref ____CardListNotUpgraded, ref ____CardListNotUpgradedByClass, ref ____CardListByClassType, ref ____CardEnergyCost);
+            InitNewCard(newCardRare, ref ____CardItemByType, ref ____CardListByType, ref ____CardListByClass, ref ____CardListNotUpgraded, ref ____CardListNotUpgradedByClass, ref ____CardListByClassType, ref ____CardEnergyCost);
+
+
         }
 
 

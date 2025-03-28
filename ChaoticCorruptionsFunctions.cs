@@ -228,6 +228,75 @@ namespace ChaoticCorruptions
                 
         //     }
         // }
+
+        internal static void InitNewCard(CardData newCard,
+            ref Dictionary<Enums.CardType, List<string>> ____CardItemByType,
+            ref Dictionary<Enums.CardType, List<string>> ____CardListByType,
+            ref Dictionary<Enums.CardClass, List<string>> ____CardListByClass,
+            ref List<string> ____CardListNotUpgraded,
+            ref Dictionary<Enums.CardClass, List<string>> ____CardListNotUpgradedByClass,
+            ref Dictionary<string, List<string>> ____CardListByClassType,
+            ref Dictionary<string, int> ____CardEnergyCost)
+        {
+            newCard.InitClone(newCard.Id);
+
+            ____CardEnergyCost.Add(newCard.Id, newCard.EnergyCost);
+            Globals.Instance.IncludeInSearch(newCard.CardName, newCard.Id);
+            ____CardListByClass[newCard.CardClass].Add(newCard.Id);
+            if (newCard.CardUpgraded == Enums.CardUpgraded.No)
+            {
+                ____CardListNotUpgradedByClass[newCard.CardClass].Add(newCard.Id);
+                ____CardListNotUpgraded.Add(newCard.Id);
+                if (newCard.CardClass == Enums.CardClass.Item)
+                {
+                    if (!____CardItemByType.ContainsKey(newCard.CardType))
+                        ____CardItemByType.Add(newCard.CardType, new List<string>());
+                    ____CardItemByType[newCard.CardType].Add(newCard.Id);
+                }
+            }
+            List<Enums.CardType> cardTypes = newCard.GetCardTypes();
+            for (int index = 0; index < cardTypes.Count; ++index)
+            {
+                if (!____CardListByType.ContainsKey(cardTypes[index]))
+                    ____CardListByType.Add(cardTypes[index], new List<string>());
+                ____CardListByType[cardTypes[index]].Add(newCard.Id);
+                string key2 = Enum.GetName(typeof(Enums.CardClass), newCard.CardClass) + "_" + Enum.GetName(typeof(Enums.CardType), cardTypes[index]);
+                if (!____CardListByClassType.ContainsKey(key2))
+                    ____CardListByClassType[key2] = new List<string>();
+                ____CardListByClassType[key2].Add(newCard.Id);
+                Globals.Instance.IncludeInSearch(Texts.Instance.GetText(Enum.GetName(typeof(Enums.CardType), cardTypes[index])), newCard.Id);
+            }
+
+            newCard.InitClone2();
+            newCard.SetDescriptionNew(true);
+        }
+
+        public static CardData AddNewCard(string id, string baseId, ref Dictionary<string, CardData> ____CardsSource, ref Dictionary<string, CardData> ____Cards)
+        {
+            if (____CardsSource.TryGetValue(baseId, out CardData cardPrefab))
+            {
+                LogInfo($"Adding new card: {id} from {baseId}");
+                CardData newCard = UnityEngine.Object.Instantiate(cardPrefab);
+                newCard.Id = id;
+                newCard.InternalId = id;
+
+                if (newCard.Item != null)
+                {
+                    newCard.Item = UnityEngine.Object.Instantiate(newCard.Item);
+                    newCard.Item.Id = id;
+                }
+                if (newCard.ItemEnchantment != null)
+                {
+                    newCard.ItemEnchantment = UnityEngine.Object.Instantiate(newCard.ItemEnchantment);
+                    newCard.ItemEnchantment.Id = id;
+                }
+
+                ____CardsSource.Add(newCard.Id.ToLower(), newCard);
+                ____Cards.Add(newCard.Id.ToLower(), newCard);
+                return newCard;
+            }
+            return null;
+        }
     }
 }
 

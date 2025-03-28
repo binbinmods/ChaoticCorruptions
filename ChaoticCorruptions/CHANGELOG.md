@@ -1,6 +1,10 @@
+# 0.9.0
+
+Added the option to replace your starting deck with Chaos or CHAOS that allows you to randomly generate cards.
+
 # 0.8.0
 
-
+Fixed config options not working properly.
 
 # 0.7.0
 
