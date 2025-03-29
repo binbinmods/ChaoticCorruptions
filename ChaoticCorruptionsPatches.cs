@@ -147,7 +147,7 @@ namespace ChaoticCorruptions
                 __instance.Cards = cards;
             }
 
-            if (ChaoticStartingDeck.Value || devMode)
+            if (PandorasBox.Value || devMode)
             {
 
                 LogDebug($"SetInitialCardsPostfix - Pandoras Box");
@@ -156,10 +156,10 @@ namespace ChaoticCorruptions
                 {
                     string card = cards[i];
                     LogDebug(card);
-                    if (Globals.Instance.GetCardData(card).Starter || Globals.Instance.GetCardData(card) == null)
-                    {
-                        continue;
-                    }
+                    // if (Globals.Instance.GetCardData(card).Starter || Globals.Instance.GetCardData(card) == null)
+                    // {
+                    //     continue;
+                    // }
                     LogDebug("past check");
                     string newCard = CorruptStartingDecks.Value ? "chaoticchaosrare" : "chaoticchaos";
                     LogDebug($"newCard {newCard}");
@@ -386,42 +386,83 @@ namespace ChaoticCorruptions
             string cardToCloneFrom = "lasthope";
             CardData newCard = AddNewCard($"chaotic{cardId}", cardToCloneFrom, ref ____CardsSource, ref ____Cards);
 
-            newCard.UpgradedFrom = "";
+            newCard.UpgradedFrom = "chaoticchaos";
             newCard.CardClass = Enums.CardClass.Special;
             newCard.EnergyCost = 0;
-            newCard.CardType = Enums.CardType.Skill;
+            newCard.CardType = Enums.CardType.None;
             newCard.AddCard = 1;
             newCard.AddCardChoose = 6;
             newCard.AddCardVanish = false;
-            newCard.AddCardReducedCost = 0;
+            newCard.AddCardReducedCost = 1;
+            newCard.AddCardCostTurn = false;
             newCard.AddCardPlace = Enums.CardPlace.Hand;
             newCard.CardName = "Chaos";
             newCard.CardUpgraded = Enums.CardUpgraded.Rare;
             newCard.CardRarity = Enums.CardRarity.Epic;
+            // newCard.Corrupted = true;
+            // newCard.Visible = true;                
             newCard.Playable = true;
+            
 
             string cardIdrare = "chaosrare";
             CardData newCardRare = AddNewCard($"chaotic{cardIdrare}", cardToCloneFrom, ref ____CardsSource, ref ____Cards);
 
-            newCardRare.UpgradedFrom = "";
+            newCardRare.UpgradedFrom = "chaoticchaosrare";
             newCardRare.CardClass = Enums.CardClass.Special;
             newCardRare.EnergyCost = 0;
-            newCardRare.CardType = Enums.CardType.Skill;
+            newCardRare.CardType = Enums.CardType.None;
             newCardRare.AddCard = 1;
             newCardRare.RelatedCard = "";
             newCardRare.AddCardChoose = 10;
             newCardRare.CardName = "CHAOS!";
             newCardRare.AddCardVanish = false;
+            newCardRare.AddCardReducedCost = 2;
+            newCardRare.AddCardCostTurn = false;
             newCardRare.AddCardPlace = Enums.CardPlace.Hand;
             newCardRare.CardUpgraded = Enums.CardUpgraded.Rare;
             newCardRare.CardRarity = Enums.CardRarity.Mythic;
             newCardRare.Playable = true;
+            // newCardRare.Visible = true;
 
             InitNewCard(newCard, ref ____CardItemByType, ref ____CardListByType, ref ____CardListByClass, ref ____CardListNotUpgraded, ref ____CardListNotUpgradedByClass, ref ____CardListByClassType, ref ____CardEnergyCost);
             InitNewCard(newCardRare, ref ____CardItemByType, ref ____CardListByType, ref ____CardListByClass, ref ____CardListNotUpgraded, ref ____CardListNotUpgradedByClass, ref ____CardListByClassType, ref ____CardEnergyCost);
 
 
+
         }
+        
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(CardCraftManager), "CreateDeck")]
+        public static void CreateDeckPrefix(CardCraftManager __instance, int _heroIndex, bool fast = false)
+        {
+            Hero currentHero = AtOManager.Instance.GetHero(_heroIndex);
+            LogDebug($"{currentHero.SourceName} cardsL=: {string.Join(", ", currentHero.Cards)}");
+        }
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(CardCraftManager), "CreateDeck")]
+        public static void SetBlocked(CardCraftManager __instance)
+        {
+            // Hero currentHero = AtOManager.Instance.GetHero(_heroIndex);
+            LogDebug($"SetBlocked");
+        }
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(CardCraftManager), "RedrawGridLayout")]
+        public static void RedrawGridLayout(CardCraftManager __instance)
+        {
+            LogDebug($"RedrawGridLayout");
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(CardVertical), "SetCard")]
+        public static void SetCardPrefix(CardVertical __instance, string _cardId, int _cardType = 0, Hero _hero = null)
+        {
+            LogDebug($"SetCardPrefix - {_cardId} ");
+            CardData cardData = Globals.Instance.GetCardData(_cardId.Split('_', StringSplitOptions.None)[0], false);
+            LogDebug($"{_cardId} carddata {cardData.Id} ");
+            
+            
+        }
+        
 
 
     }

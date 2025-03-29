@@ -1,3 +1,7 @@
+# 0.9.1
+
+Pandora's Box mode now allows for card removal and reduces the cost of discovered cards.
+
 # 0.9.0
 
 Added Pandora's Box option to replace your starting deck with Chaos or CHAOS that allows you to randomly generate cards.
