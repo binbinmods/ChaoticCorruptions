@@ -1,3 +1,7 @@
+# 1.1.0
+
+Updated for version 1.7.6.3
+
 # 0.9.1
 
 Pandora's Box mode now allows for card removal and reduces the cost of discovered cards.
