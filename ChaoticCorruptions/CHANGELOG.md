@@ -1,3 +1,7 @@
+# 1.1.1
+
+Prevented Score logging
+
 # 1.1.0
 
 Updated for version 1.7.6.3

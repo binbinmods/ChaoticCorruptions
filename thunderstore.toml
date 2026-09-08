@@ -4,7 +4,7 @@ schemaVersion = "1.0.0"
 [package]
 namespace = "Binbin"
 name = "Chaotic_Corruptions"
-versionNumber = "1.1.0"
+versionNumber = "1.1.1"
 description = "Provides configs to Randomize or Corrupt starter cards and items."
 websiteUrl = "https://github.com/binbinmods/ChaoticCorruptions"
 containsNsfwContent = false
